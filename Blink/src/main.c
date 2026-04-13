@@ -12,7 +12,7 @@ static const struct gpio_dt_spec thd2_led = GPIO_DT_SPEC_GET(DT_ALIAS(leda1), gp
 static const struct gpio_dt_spec thd3_led = GPIO_DT_SPEC_GET(DT_ALIAS(leda2), gpios);
 
 
-// Allocates memory for a thread stack at compile time and gives 
+// Allocates memory for a thread stack at compile time and gives
 K_THREAD_STACK_DEFINE(thread1_stack, STACK_SIZE);
 K_THREAD_STACK_DEFINE(thread2_stack, STACK_SIZE);
 K_THREAD_STACK_DEFINE(thread3_stack, STACK_SIZE);
@@ -21,48 +21,50 @@ struct k_thread thread1_leda0;
 struct k_thread thread2_leda1;
 struct k_thread thread3_leda2;
 
-int ret;
-
 void leda0_thread(void *arg1, void *arg2, void *arg3){
 	// Configure the pin as output and set initial state, active means active state (on if high)
-	ret = gpio_pin_configure_dt(&thd1_led, GPIO_OUTPUT_ACTIVE);
+	int ret = gpio_pin_configure_dt(&thd1_led, GPIO_OUTPUT_ACTIVE);
 	if(ret < 0){
 		return;
 	}
 	while(1){
 		gpio_pin_toggle_dt(&thd1_led);
-		k_msleep(100);
+		printk("Thread 0\n");
+		k_msleep(1000);
 	}
 }
 
 void leda1_thread(void *arg1, void *arg2, void *arg3){
-	ret = gpio_pin_configure_dt(&thd2_led, GPIO_OUTPUT_ACTIVE);
+	int ret = gpio_pin_configure_dt(&thd2_led, GPIO_OUTPUT_ACTIVE);
 	if(ret < 0){
 		return;
 	}
 	while(1){
 		gpio_pin_toggle_dt(&thd2_led);
-		k_msleep(80);
+		printk("Thread 1\n");
+		k_msleep(800);
 	}
 }
 
 void leda2_thread(void *arg1, void *arg2, void *arg3){
-	ret = gpio_pin_configure_dt(&thd3_led, GPIO_OUTPUT_ACTIVE);
+	int ret = gpio_pin_configure_dt(&thd3_led, GPIO_OUTPUT_ACTIVE);
 	if(ret < 0){
 		return;
 	}
 	while(1){
 		gpio_pin_toggle_dt(&thd3_led);
-		k_msleep(120);
+		printk("Thread 2\n");
+		k_msleep(1200);
 	}
-	k_thread_stack_t
 }
 
 int main(void){
 	// Ensures the GPIO controller is initialized
 	if(!gpio_is_ready_dt(&thd1_led) || !gpio_is_ready_dt(&thd2_led) || !gpio_is_ready_dt(&thd3_led)){
+		printk("GPIO not ready!\n");
         return 0;
     }
+	printk("GPIO ready!\n");
 	
 	// Create threads
 	// params: thread control block struct - thread stack handle - stack size - thread function - function parameters (3) - priority - options - delay (start immediately)

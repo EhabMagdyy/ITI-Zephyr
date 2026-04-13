@@ -1,4 +1,4 @@
-# Zephyr Multi-Threaded LED Blink
+# Zephyr Multi-Threaded LED Blink for STM32/ESP32
 
 Blinks 3 LEDs simultaneously at different rates using Zephyr RTOS threads.
 
@@ -10,9 +10,9 @@ Each LED runs in its own thread, toggling independently with no blocking effect 
 
 | Thread | LED Alias | Blink Interval |
 |---|---|---|
-| `leda0_thread` | `leda0` | 100 ms |
-| `leda1_thread` | `leda1` | 80 ms |
-| `leda2_thread` | `leda2` | 120 ms |
+| `leda0_thread` | `leda0` | 1000 ms |
+| `leda1_thread` | `leda1` | 800 ms |
+| `leda2_thread` | `leda2` | 1200 ms |
 
 ---
 
@@ -67,7 +67,7 @@ Zephyr Scheduler runs all 3 threads concurrently
 
 ---
 
-## Build & Flash
+## A) Build & Flash for STM32
 
 ### source if you dont want to pass `-DPython...`
 ``` bash 
@@ -76,7 +76,7 @@ source /home/ehab/zephyrproject/zephyr/.venv/bin/activate
 
 ### You can give a custom named overlay
 ``` bash
-west build -p always -b blackpill_f401cc . --extra-dtc-overlay board/stm32401_ledoverlay.overlay -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
+west build -p always -b blackpill_f401cc . --extra-dtc-overlay board/stm324.overlay -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
 ```
 
 ### Flash
@@ -84,4 +84,26 @@ west build -p always -b blackpill_f401cc . --extra-dtc-overlay board/stm32401_le
 # Press NRST Button
 west flash -r openocd
 # Release after ~1sec
+```
+
+## B) Build & Flash for ESP32
+
+### You can give a custom named overlay
+``` bash
+west build -p always -b esp32_devkitc/esp32/procpu .   --extra-dtc-overlay board/esp32.overlay   -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
+```
+
+### Flash
+``` bash
+west flash --esp-device /dev/ttyUSB0
+```
+
+### Monitor
+``` bash
+sudo apt install screen
+screen /dev/ttyUSB0 115200
+# to terminate
+# ctrl + A + X
+# from another terminal run
+sudo pkill -9 -f "screen dev/ttyUSB0 115200"
 ```
