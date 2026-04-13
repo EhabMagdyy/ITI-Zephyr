@@ -75,7 +75,7 @@ Zephyr Scheduler runs all 3 threads concurrently
 source /home/ehab/zephyrproject/zephyr/.venv/bin/activate
 ```
 
-### You can give a custom named overlay
+### Build & give it an overlay
 ``` bash
 west build -p always -b blackpill_f401cc . --extra-dtc-overlay board/stm324.overlay -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
 ```
@@ -89,9 +89,9 @@ west flash -r openocd
 
 ## B) Build & Flash for ESP32
 
-### You can give a custom named overlay
+### Build & give it an overlay
 ``` bash
-west build -p always -b esp32_devkitc/esp32/procpu . --extra-dtc-overlay board/esp32.overlay - Python3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
+west build -p always -b esp32_devkitc/esp32/procpu . --extra-dtc-overlay board/esp32.overlay -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
 ```
 ```
 | Property          | `procpu` (Core 0) | `appcpu` (Core 1) |
