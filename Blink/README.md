@@ -37,6 +37,7 @@ void leda0_thread(void *arg1, void *arg2, void *arg3) {
     gpio_pin_configure_dt(&thd1_led, GPIO_OUTPUT_ACTIVE);
     while(1) {
         gpio_pin_toggle_dt(&thd1_led);
+		printk("Thread 0\n");
         k_msleep(100);
     }
 }
@@ -90,7 +91,14 @@ west flash -r openocd
 
 ### You can give a custom named overlay
 ``` bash
-west build -p always -b esp32_devkitc/esp32/procpu .   --extra-dtc-overlay board/esp32.overlay   -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
+west build -p always -b esp32_devkitc/esp32/procpu . --extra-dtc-overlay board/esp32.overlay - Python3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
+```
+```
+| Property          | `procpu` (Core 0) | `appcpu` (Core 1) |
+|------------------ |:-----------------:|:-----------------:|
+| **Full name**     | Protocol CPU | Application CPU |
+| **Role**          | Main core, boots first, runs WiFi/BT stack | Secondary core, started by `procpu` |
+| **Use in Zephyr** | ✅ Default — run your app here | ⚠️ Rarely used standalone |
 ```
 
 ### Flash
