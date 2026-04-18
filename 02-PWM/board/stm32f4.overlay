@@ -3,6 +3,7 @@
 
     pwm2: pwm {
         status = "okay";
+		// TIM2_CH2 -> PA1, TIM2_CH3 -> PA2, TIM2_CH4 -> PA3
         pinctrl-0 = <&tim2_ch2_pa1 &tim2_ch3_pa2 &tim2_ch4_pa3>;
         pinctrl-names = "default";
     };
@@ -19,11 +20,13 @@
         compatible = "pwm-leds";
 
         pwm_led_0: pwm_led_0 {
+			// pwm2 channel 2, period of 20ms, inverted polarity
             pwms = <&pwm2 2 PWM_MSEC(20) PWM_POLARITY_INVERTED>;
             label = "TIM2 CH2";
         };
+		
         pwm_led_1: pwm_led_1 {
-            pwms = <&pwm2 3 PWM_MSEC(20) PWM_POLARITY_INVERTED>;
+            pwms = <&pwm2 3 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
             label = "TIM2 CH3";
         };
         pwm_led_2: pwm_led_2 {
