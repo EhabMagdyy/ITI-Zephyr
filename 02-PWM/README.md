@@ -9,7 +9,7 @@ source /home/ehab/zephyrproject/zephyr/.venv/bin/activate
 
 ## Build & give it an overlay
 ``` bash
-west build -p always -b blackpill_f401cc . --extra-dtc-overlay board/stm324.overlay -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
+west build -p always -b blackpill_f401cc . --extra-dtc-overlay board/stm32f4.overlay -DPython3_EXECUTABLE=/home/ehab/zephyrproject/.venv/bin/python3
 ```
 
 ## Flash
