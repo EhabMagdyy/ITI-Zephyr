@@ -1,4 +1,4 @@
-# Zephyr PWM for STM32
+# Zephyr ADC Controls PWM using Message Queue
 
 ## Build & Flash for STM32
 
