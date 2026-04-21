@@ -1,0 +1,49 @@
+&timers2 {
+    status = "okay";
+
+    pwm2: pwm {
+        status = "okay";
+		// TIM2_CH2 -> PA1
+        pinctrl-0 = <&tim2_ch2_pa1>;
+        pinctrl-names = "default";
+    };
+};
+
+/ {
+    aliases {
+        pwma1 = &pwm_led_0;
+    };
+
+    pwms {
+        compatible = "pwm-leds";
+
+        pwm_led_0: pwm_led_0 {
+			// pwm2 channel 2, period of 20ms, normal polarity
+            pwms = <&pwm2 2 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+            label = "TIM2 CH2";
+        };
+    };
+
+    zephyr,user {
+        // ADC1 channel 0 = PA0
+        io-channels = <&adc1 0>;
+    };
+};
+
+&adc1 {
+    pinctrl-0 = <&adc1_in0_pa0>;
+    pinctrl-names = "default";
+    st,adc-clock-source = "SYNC";
+    st,adc-prescaler = <2>;
+    #address-cells = <1>;
+    #size-cells = <0>;
+    status = "okay";
+
+    channel@0 {
+        reg = <0>;
+        zephyr,gain = "ADC_GAIN_1";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,resolution = <12>;
+    };
+};
