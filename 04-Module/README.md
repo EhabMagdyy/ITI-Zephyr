@@ -206,11 +206,6 @@ properties:
     type: phandle-array
     required: true
     description: GPIO pin controlling the power switch.
-
-  startup-delay-ms:
-    type: int
-    default: 0
-    description: Delay after power-on in milliseconds.
 ```
 
 ### 5.7 `modules/power_switch/include/drivers/power_switch.h`
@@ -275,7 +270,6 @@ LOG_MODULE_REGISTER(power_switch, CONFIG_LOG_DEFAULT_LEVEL);
 
 struct power_switch_config {
     struct gpio_dt_spec gpio;
-    uint32_t startup_delay_ms;
 };
 
 struct power_switch_data {
@@ -292,10 +286,6 @@ static int power_switch_api_on(const struct device *dev)
     if (ret < 0) {
         LOG_ERR("Failed to set GPIO high: %d", ret);
         return ret;
-    }
-
-    if (cfg->startup_delay_ms) {
-        k_msleep(cfg->startup_delay_ms);
     }
 
     data->state = true;
@@ -358,7 +348,6 @@ static int power_switch_init(const struct device *dev)
                                                                        \
     static const struct power_switch_config power_switch_cfg_##inst = {\
         .gpio = GPIO_DT_SPEC_INST_GET(inst, gpios),                    \
-        .startup_delay_ms = DT_INST_PROP(inst, startup_delay_ms),      \
     };                                                                 \
                                                                        \
     DEVICE_DT_INST_DEFINE(inst,                                        \
@@ -381,7 +370,6 @@ DT_INST_FOREACH_STATUS_OKAY(POWER_SWITCH_INIT)
         compatible = "power-switch";
         status = "okay";
         gpios = <&gpioa 5 GPIO_ACTIVE_HIGH>;
-        startup-delay-ms = <10>;
     };
 };
 ```

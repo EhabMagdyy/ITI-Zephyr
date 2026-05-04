@@ -3,6 +3,5 @@
         compatible = "power-switch";
         status = "okay";
         gpios = <&gpioa 5 GPIO_ACTIVE_HIGH>;
-        startup-delay-ms = <10>;
     };
 };

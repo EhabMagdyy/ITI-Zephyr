@@ -7,31 +7,25 @@
 
 LOG_MODULE_REGISTER(power_switch, CONFIG_LOG_DEFAULT_LEVEL);
 
-/* Per-instance configuration (read-only, from devicetree) */
+// Per-instance configuration(read-only, from devicetree)
 struct power_switch_config {
     struct gpio_dt_spec gpio;
-    uint32_t startup_delay_ms;
 };
 
-/* Per-instance runtime data */
+// Per-instance runtime data
 struct power_switch_data {
     bool state;
 };
 
-static int power_switch_api_on(const struct device *dev)
-{
+static int power_switch_api_on(const struct device *dev){
     const struct power_switch_config *cfg = dev->config;
     struct power_switch_data *data = dev->data;
     int ret;
 
     ret = gpio_pin_set_dt(&cfg->gpio, 1);
-    if (ret < 0) {
+    if(ret < 0) {
         LOG_ERR("Failed to set GPIO high: %d", ret);
         return ret;
-    }
-
-    if (cfg->startup_delay_ms) {
-        k_msleep(cfg->startup_delay_ms);
     }
 
     data->state = true;
@@ -39,14 +33,13 @@ static int power_switch_api_on(const struct device *dev)
     return 0;
 }
 
-static int power_switch_api_off(const struct device *dev)
-{
+static int power_switch_api_off(const struct device *dev){
     const struct power_switch_config *cfg = dev->config;
     struct power_switch_data *data = dev->data;
     int ret;
 
     ret = gpio_pin_set_dt(&cfg->gpio, 0);
-    if (ret < 0) {
+    if(ret < 0) {
         LOG_ERR("Failed to set GPIO low: %d", ret);
         return ret;
     }
@@ -56,8 +49,7 @@ static int power_switch_api_off(const struct device *dev)
     return 0;
 }
 
-static int power_switch_api_get_state(const struct device *dev, bool *state)
-{
+static int power_switch_api_get_state(const struct device *dev, bool *state){
     struct power_switch_data *data = dev->data;
     *state = data->state;
     return 0;
@@ -69,18 +61,17 @@ static const struct power_switch_driver_api power_switch_api = {
     .get_state = power_switch_api_get_state,
 };
 
-static int power_switch_init(const struct device *dev)
-{
+static int power_switch_init(const struct device *dev){
     const struct power_switch_config *cfg = dev->config;
     int ret;
 
-    if (!gpio_is_ready_dt(&cfg->gpio)) {
+    if(!gpio_is_ready_dt(&cfg->gpio)) {
         LOG_ERR("GPIO device not ready");
         return -ENODEV;
     }
 
     ret = gpio_pin_configure_dt(&cfg->gpio, GPIO_OUTPUT_INACTIVE);
-    if (ret < 0) {
+    if(ret < 0) {
         LOG_ERR("Failed to configure GPIO: %d", ret);
         return ret;
     }
@@ -95,7 +86,6 @@ static int power_switch_init(const struct device *dev)
                                                                        \
     static const struct power_switch_config power_switch_cfg_##inst = {\
         .gpio = GPIO_DT_SPEC_INST_GET(inst, gpios),                    \
-        .startup_delay_ms = DT_INST_PROP(inst, startup_delay_ms),      \
     };                                                                 \
                                                                        \
     DEVICE_DT_INST_DEFINE(inst,                                        \

@@ -1,3 +1,0 @@
-zephyr_include_directories(include)
-
-add_subdirectory_ifdef(CONFIG_POWER_SWITCH drivers/power_switch)

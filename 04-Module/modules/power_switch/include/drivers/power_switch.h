@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-/* Driver API: function pointer table */
+// Driver API: function pointer table
 typedef int (*power_switch_on_t)(const struct device *dev);
 typedef int (*power_switch_off_t)(const struct device *dev);
 typedef int (*power_switch_get_state_t)(const struct device *dev, bool *state);

@@ -1,2 +1,0 @@
-zephyr_library_named(power_switch_driver)
-zephyr_library_sources(power_switch.c)

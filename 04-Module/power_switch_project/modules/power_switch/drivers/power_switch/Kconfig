@@ -1,7 +1,0 @@
-config POWER_SWITCH
-    bool "Power Switch GPIO driver"
-    default y
-    depends on GPIO
-    depends on DT_HAS_POWER_SWITCH_ENABLED
-    help
-      Enable the GPIO-based power switch driver.

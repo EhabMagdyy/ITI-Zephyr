@@ -9,8 +9,3 @@ properties:
     type: phandle-array
     required: true
     description: GPIO pin controlling the power switch.
-
-  startup-delay-ms:
-    type: int
-    default: 0
-    description: Delay after power-on in milliseconds.
