@@ -2,8 +2,6 @@ description: GPIO-controlled power switch
 
 compatible: "power-switch"
 
-include: base.yaml
-
 properties:
   gpios:
     type: phandle-array

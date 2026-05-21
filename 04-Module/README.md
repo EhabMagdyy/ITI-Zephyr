@@ -110,11 +110,10 @@ power_switch_project/
         ├── zephyr/
         │   └── module.yml            # Tells Zephyr this is a module
         ├── CMakeLists.txt            # Module build entry
-        ├── Kconfig                   # Module config entry
+        ├── Kconfig                   # Driver options
         ├── drivers/
         │   └── power_switch/
         │       ├── CMakeLists.txt    # Driver sources
-        │       ├── Kconfig           # Driver options
         │       └── power_switch.c    # Driver implementation
         ├── dts/
         │   └── bindings/
@@ -132,9 +131,8 @@ power_switch_project/
 |------|---------|
 | `module.yml` | Declares this directory as a Zephyr module |
 | `modules/power_switch/CMakeLists.txt` | Top-level module CMake; enters `drivers/` |
-| `modules/power_switch/Kconfig` | Top-level module Kconfig; sources driver Kconfig |
+| `modules/power_switch/Kconfig` | Defines `CONFIG_POWER_SWITCH` option |
 | `drivers/power_switch/CMakeLists.txt` | Compiles `power_switch.c` |
-| `drivers/power_switch/Kconfig` | Defines `CONFIG_POWER_SWITCH` option |
 | `drivers/power_switch/power_switch.c` | Actual driver logic |
 | `dts/bindings/power-switch.yaml` | Schema for `compatible = "power-switch"` |
 | `include/drivers/power_switch.h` | Public API header |
@@ -199,8 +197,6 @@ description: GPIO-controlled power switch
 
 compatible: "power-switch"
 
-include: base.yaml
-
 properties:
   gpios:
     type: phandle-array
@@ -231,20 +227,17 @@ __subsystem struct power_switch_driver_api {
     power_switch_get_state_t get_state;
 };
 
-static inline int power_switch_on(const struct device *dev)
-{
+static inline int power_switch_on(const struct device *dev){
     const struct power_switch_driver_api *api = dev->api;
     return api->on(dev);
 }
 
-static inline int power_switch_off(const struct device *dev)
-{
+static inline int power_switch_off(const struct device *dev){
     const struct power_switch_driver_api *api = dev->api;
     return api->off(dev);
 }
 
-static inline int power_switch_get_state(const struct device *dev, bool *state)
-{
+static inline int power_switch_get_state(const struct device *dev, bool *state){
     const struct power_switch_driver_api *api = dev->api;
     return api->get_state(dev, state);
 }
@@ -276,8 +269,7 @@ struct power_switch_data {
     bool state;
 };
 
-static int power_switch_api_on(const struct device *dev)
-{
+static int power_switch_api_on(const struct device *dev){
     const struct power_switch_config *cfg = dev->config;
     struct power_switch_data *data = dev->data;
     int ret;
@@ -293,8 +285,7 @@ static int power_switch_api_on(const struct device *dev)
     return 0;
 }
 
-static int power_switch_api_off(const struct device *dev)
-{
+static int power_switch_api_off(const struct device *dev){
     const struct power_switch_config *cfg = dev->config;
     struct power_switch_data *data = dev->data;
     int ret;
@@ -310,8 +301,7 @@ static int power_switch_api_off(const struct device *dev)
     return 0;
 }
 
-static int power_switch_api_get_state(const struct device *dev, bool *state)
-{
+static int power_switch_api_get_state(const struct device *dev, bool *state){
     struct power_switch_data *data = dev->data;
     *state = data->state;
     return 0;
@@ -323,8 +313,7 @@ static const struct power_switch_driver_api power_switch_api = {
     .get_state = power_switch_api_get_state,
 };
 
-static int power_switch_init(const struct device *dev)
-{
+static int power_switch_init(const struct device *dev){
     const struct power_switch_config *cfg = dev->config;
     int ret;
 
@@ -366,7 +355,7 @@ DT_INST_FOREACH_STATUS_OKAY(POWER_SWITCH_INIT)
 
 ```dts
 / {
-    pwr_sw1: power_switch_1 {
+    power_switches: power_switch_1 {
         compatible = "power-switch";
         status = "okay";
         gpios = <&gpioa 5 GPIO_ACTIVE_HIGH>;
@@ -374,7 +363,7 @@ DT_INST_FOREACH_STATUS_OKAY(POWER_SWITCH_INIT)
 };
 ```
 
-> ⚠️ **`pwr_sw1:`** before the node name is the **devicetree node label**, required for `DT_NODELABEL(pwr_sw1)` in the application.
+> ⚠️ **`power_switches:`** before the node name is the **devicetree node label**, required for `DT_NODELABEL(power_switches)` in the application.
 
 ### 5.10 `prj.conf`
 
